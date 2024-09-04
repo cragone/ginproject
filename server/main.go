@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"server/handlers"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -34,9 +35,14 @@ func main() {
 
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
-			"hello, world"
+			"message": "hello, world",
 		})
 	})
+
+	people := r.Group("/attendees")
+	{
+		people.GET("/displayed", handlers.HandleGetAllAttendees)
+	}
 
 	r.NoRoute(func(c *gin.Context) {
 		fmt.Println("you are in no route")

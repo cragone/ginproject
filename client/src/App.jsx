@@ -3,7 +3,7 @@ import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
 import HomePage from "./containers/HomePage";
 
 
-function App() {
+const App = () => {
   return (
     <div>
         <Router>

@@ -13,7 +13,7 @@ const HomePage = () => {
         axios.get(`http://${apiRoute}:8080/`)
         .then((response) => {
             console.log(response.data);
-            setInfo(response.data);
+            setInfo(response.data.message); //needs the access key "message" from the response in json being sent.
         })
         .catch((error) => {
             console.log(error);

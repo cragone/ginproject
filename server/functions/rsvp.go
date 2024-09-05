@@ -11,25 +11,39 @@ type Rsvp struct {
 	Rsvp      bool   `json:"rsvp"`
 }
 
-func RsvpAdded() (rsvps []Rsvp, err error) {
+func RsvpAdded(firstName, lastName string, rsvp bool) (rsvps []Rsvp, err error) {
 	db, err := networkconn.GetDB()
 	if err != nil {
 		return nil, err
 	}
-
 	defer db.Close()
 
 	query := `
 		UPDATE
 			wedding_info
 		SET 
-			rsvp = %s
+			rsvp = ?
 		WHERE
-			f_name = %s 
+			f_name = ? 
 		AND
-			l_name = %s
+			l_name = ?
 	`
-	rows, err := db.Query(query)
+	_, err = db.Exec(query, rsvp, firstName, lastName)
+	if err != nil {
+		return nil, err
+	}
+
+	query = `
+		SELECT
+			f_name, l_name, rsvp
+		FROM
+			wedding_info
+		WHERE
+			f_name = ? 
+		AND
+			l_name = ?
+	`
+	rows, err := db.Query(query, firstName, lastName)
 	if err != nil {
 		return nil, err
 	}

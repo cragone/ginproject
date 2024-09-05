@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"net/http"
 	"server/handlers"
 	"time"
 
@@ -33,11 +32,16 @@ func main() {
 		MaxAge:           12 * time.Hour,
 	}))
 
-	r.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "hello, Regeneron",
-		})
-	})
+	// r.GET("/", func(c *gin.Context) {
+	// 	c.JSON(http.StatusOK, gin.H{
+	// 		"message": "Hello, Regeneron",
+	// 	})
+	// })
+
+	rsvp := r.Group("/rsvp")
+	{
+		rsvp.POST("/decided", handlers.HandlePostRsvpDecision)
+	}
 
 	people := r.Group("/attendees")
 	{

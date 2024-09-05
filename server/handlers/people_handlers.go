@@ -8,7 +8,7 @@ import (
 )
 
 func HandleGetAllAttendees(c *gin.Context) {
-	fmt.Print("only handler function running is get all attendees")
+	fmt.Print("handler function running is get all attendees")
 
 	attendeeList, err := functions.GetAttendeeInformation()
 	if err != nil {

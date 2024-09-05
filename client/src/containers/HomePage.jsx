@@ -6,11 +6,22 @@ import InviteList from "../components/InviteList";
 const HomePage = () => {
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <InviteList />
-      
-
-    </div>
+    <div className="flex min-h-screen bg-gray-100">
+  <div className="w-1/2 flex flex-col items-center justify-center">
+    <h1 className="text-2xl font-bold mb-4">Plan Your Wedding</h1>
+    <p>
+      Add to the invite List  
+    </p>
+    <p>
+    RSVP Guests
+    </p>
+    {/* <!-- Add your content for planning the wedding here --> */}
+  </div>
+  <div className="w-1/2 flex flex-col items-center justify-center">
+    <h1 className="text-2xl font-bold mb-4">Your Wedding List</h1>
+    <InviteList />
+  </div>
+</div>
   );
 };
 

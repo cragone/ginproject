@@ -22,11 +22,11 @@ func RsvpAdded(firstName, lastName string, rsvp bool) (rsvps []Rsvp, err error) 
 		UPDATE
 			wedding_info
 		SET 
-			rsvp = ?
+			rsvp = $1
 		WHERE
-			f_name = ? 
+			f_name = $2 
 		AND
-			l_name = ?
+			l_name = $3
 	`
 	_, err = db.Exec(query, rsvp, firstName, lastName)
 	if err != nil {
@@ -39,9 +39,9 @@ func RsvpAdded(firstName, lastName string, rsvp bool) (rsvps []Rsvp, err error) 
 		FROM
 			wedding_info
 		WHERE
-			f_name = ? 
+			f_name = $1 
 		AND
-			l_name = ?
+			l_name = $2
 	`
 	rows, err := db.Query(query, firstName, lastName)
 	if err != nil {
@@ -58,7 +58,7 @@ func RsvpAdded(firstName, lastName string, rsvp bool) (rsvps []Rsvp, err error) 
 		rsvps = append(rsvps, r)
 	}
 	if err = rows.Err(); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("row iteration error: %w", err)
 	}
 
 	fmt.Println("Updated attendees rsvp:", rsvps)

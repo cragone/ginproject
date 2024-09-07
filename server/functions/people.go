@@ -25,7 +25,7 @@ func GetAttendeeInformation() (attendees []AttendeeInfo, err error) {
 		SELECT
 			f_name, l_name, email, phone_number, rsvp
 		FROM
-			wedding_info`
+			attendees`
 	rows, err := db.Query(query)
 	if err != nil {
 		return nil, err

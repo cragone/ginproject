@@ -28,9 +28,10 @@ func GetDB() (*sql.DB, error) {
 	dbpassword := os.Getenv("PGPASSWORD")
 	dbhost := os.Getenv("DB_HOST")
 	sslmode := os.Getenv("DB_SSL_MODE")
+	dbport := os.Getenv("DB_PORT")
 
 	//creating the connection string
-	connString := fmt.Sprintf("user=%s password=%s dbname=%s host=%s port=%s sslmode=%s", dbuser, dbpassword, dbname, dbhost, "5432", sslmode)
+	connString := fmt.Sprintf("user=%s password=%s dbname=%s host=%s port=%s sslmode=%s", dbuser, dbpassword, dbname, dbhost, dbport, sslmode)
 
 	//opening our db and connecting.
 	db, err = sql.Open("postgres", connString)

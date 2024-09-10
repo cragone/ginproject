@@ -1,4 +1,5 @@
 import React from 'react';
+import LoginComponent from '../components/LoginButton';
 
 
 
@@ -7,9 +8,12 @@ import React from 'react';
 
 
 const LoginPage = () => {
-    return(
-        <div>
-            Welcome to the Wedding Venue.
+    return (
+        <div className="flex min-h-screen bg-gray-100">
+            <div className="w-full flex flex-col items-center justify-center">
+                Congratulations, Welcome to the Wedding Report!
+                <LoginComponent />
+            </div>
         </div>
     )
 }

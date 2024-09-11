@@ -38,6 +38,12 @@ func main() {
 	// 	})
 	// })
 
+	auth := r.Group("/auth")
+	{
+		auth.POST("/google/login", auth.handleGoogleLogin)
+		auth.POST("/callback", auth.handleGoogleCallback)
+	}
+
 	rsvp := r.Group("/rsvp")
 	{
 		rsvp.POST("/decided", handlers.HandlePostRsvpDecision)

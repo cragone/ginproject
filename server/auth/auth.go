@@ -8,6 +8,7 @@ import (
 
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
+	oauth2api "google.golang.org/api/oauth2/v2"
 )
 
 var oauth2Config = &oauth2.Config{
@@ -18,13 +19,13 @@ var oauth2Config = &oauth2.Config{
 	Endpoint:     google.Endpoint,
 }
 
-// Creates a Google login URL and redirects the user to it.
+// LoginHandler creates a Google login URL and redirects the user to it.
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	url := oauth2Config.AuthCodeURL("state-token", oauth2.AccessTypeOffline)
 	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
 }
 
-// Sets up the callback handler that receives the auth code, exchanges it for a token, and retrieves user info.
+// CallbackHandler sets up the callback handler that receives the auth code, exchanges it for a token, and retrieves user info.
 func CallbackHandler(w http.ResponseWriter, r *http.Request) {
 	code := r.URL.Query().Get("code")
 	if code == "" {
@@ -50,15 +51,15 @@ func CallbackHandler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("User info: %v", userinfo)
 }
 
-// Use the access token to retrieve user info from Google
-func getUserInfo(token *oauth2.Token) (*oauth2.Userinfoplus, error) {
+// getUserInfo uses the access token to retrieve user info from Google
+func getUserInfo(token *oauth2.Token) (*oauth2api.Userinfoplus, error) {
 	client := oauth2Config.Client(context.Background(), token)
-	oauth2Service, err := oauth2.New(client)
+	oauth2Service, err := oauth2api.New(client)
 	if err != nil {
 		return nil, err
 	}
 
-	userinfoService := oauth2.NewUserinfoService(oauth2Service)
+	userinfoService := oauth2api.NewUserinfoService(oauth2Service)
 	userinfo, err := userinfoService.Get().Do()
 	return userinfo, err
 }

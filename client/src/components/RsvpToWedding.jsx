@@ -5,7 +5,14 @@ import React from "react";
 //upon clicking one it will handle the submit
 //it will bind the yes or the no to the data depending on decision.
 
+
+
 const RsvpToWedding = () => {
+  const apiRoute = "localhost"
+
+  const handleSubmit = async () => {
+    
+  }
   return (
     <div className="flex items-center justify-center min-h-screen">
       <div className="flex flex-col items-center">

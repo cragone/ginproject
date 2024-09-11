@@ -1,9 +1,6 @@
-package auth
+package main
 
 import (
-	"context"
-	"log"
-	"net/http"
 	"os"
 
 	"golang.org/x/oauth2"
@@ -18,47 +15,32 @@ var oauth2Config = &oauth2.Config{
 	Endpoint:     google.Endpoint,
 }
 
-// Creates a Google login URL and redirects the user to it.
-func LoginHandler(w http.ResponseWriter, r *http.Request) {
-	url := oauth2Config.AuthCodeURL("state-token", oauth2.AccessTypeOffline)
-	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
-}
+// func googleAuthHandler(w http.ResponseWriter, r *http.Request) {
+// 	code := r.FormValue("code")
 
-// Sets up the callback handler that receives the auth code, exchanges it for a token, and retrieves user info.
-func CallbackHandler(w http.ResponseWriter, r *http.Request) {
-	code := r.URL.Query().Get("code")
-	if code == "" {
-		http.Error(w, "Code not found", http.StatusBadRequest)
-		return
-	}
+// 	// Verify auth code
+// 	token, err := oauth2Config.Exchange(context.Background(), code)
+// 	if err != nil {
+// 		http.Error(w, "Error verifying auth code", http.StatusInternalServerError)
+// 		return
+// 	}
 
-	token, err := oauth2Config.Exchange(context.Background(), code)
-	if err != nil {
-		http.Error(w, "Failed to exchange token", http.StatusInternalServerError)
-		log.Printf("Exchange error: %v", err)
-		return
-	}
+// 	// Exchange auth code for access token
+// 	accessToken := token.AccessToken
 
-	userinfo, err := getUserInfo(token)
-	if err != nil {
-		http.Error(w, "Failed to get user info", http.StatusInternalServerError)
-		log.Printf("User info error: %v", err)
-		return
-	}
+// 	// Store access token in session or database
+// 	session, err := store.Get(r, "session")
+// 	if err != nil {
+// 		http.Error(w, "Error storing access token", http.StatusInternalServerError)
+// 		return
+// 	}
+// 	session.Values["accessToken"] = accessToken
+// 	err = session.Save(r, w)
+// 	if err != nil {
+// 		http.Error(w, "Error saving session", http.StatusInternalServerError)
+// 		return
+// 	}
 
-	// Use the userinfo (for example, display it or start a session)
-	log.Printf("User info: %v", userinfo)
-}
-
-// Use the access token to retrieve user info from Google
-func getUserInfo(token *oauth2.Token) (*oauth2.Userinfoplus, error) {
-	client := oauth2Config.Client(context.Background(), token)
-	oauth2Service, err := oauth2.New(client)
-	if err != nil {
-		return nil, err
-	}
-
-	userinfoService := oauth2.NewUserinfoService(oauth2Service)
-	userinfo, err := userinfoService.Get().Do()
-	return userinfo, err
-}
+// 	w.Write([]byte("Authenticated successfully"))
+// }
+//needs to store session in database.

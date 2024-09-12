@@ -1,64 +1,44 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import InviteList from "../components/InviteList";
 import RsvpToWedding from "../components/RsvpToWedding";
+import { GoogleLogin } from '@react-oauth/google'; // Import the GoogleLogin component
+import axios from 'axios'; // Import axios
 
 const HomePage = () => {
-  const [authCode, setAuthCode] = useState(null);
-  const googleClientId = import.meta.env.VITE_APP_CLIENT_ID;
-  const googleRedirectUri = import.meta.env.VITE_APP_REDIRECT_URI;
-  const [accessToken, setAccessToken] = useState(null);
+  const [oneTimeCode, setOneTimeCode] = useState(null);
+  const apiRoute = "localhost:8080"; // Define your API route here
 
-  // Extract auth code from URL
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get("code");
-    if (code) {
-      setAuthCode(code);
+  const responseMessage = async (response) => {
+    console.log("One-time code:", response.credential);
+    setOneTimeCode(response.credential);
+
+    try {
+      // Send the one-time code to your Go Gin server
+      const res = await axios.post(`http://${apiRoute}/auth/exchangecode`, {
+        code: response.credential
+      });
+      console.log("Server response:", res.data);
+    } catch (error) {
+      console.error("Error sending one-time code to server:", error.response ? error.response.data : error.message);
     }
-  }, []);
-
-  // Send auth code to backend for token exchange
-  useEffect(() => {
-    if (authCode) {
-      fetch("/api/auth/google", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ code: authCode }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          setAccessToken(data.accessToken);
-        })
-        .catch((error) => {
-          console.error("Error exchanging auth code:", error);
-        });
-    }
-  }, [authCode]);
-
-  // Parse access token from URL fragment if available
-  useEffect(() => {
-    const fragment = window.location.hash.substring(1);
-    const params = new URLSearchParams(fragment);
-    const token = params.get("access_token");
-
-    if (token) {
-      setAccessToken(token);
-    }
-  }, []);
-
-  // Redirect user to Google login if not authenticated
-  const handleLogin = () => {
-    window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${googleClientId}&redirect_uri=${googleRedirectUri}&response_type=code&scope=openid+email+profile`;
   };
 
-  if (!accessToken) {
+  const errorMessage = (error) => {
+    console.error("Login Failed:", error);
+  };
+
+  if (!oneTimeCode) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <button onClick={handleLogin} className="px-4 py-2 bg-blue-600 text-white rounded">
-          Login With Google
-        </button>
+        <div className="justify-items-center">
+          <h2>React Google Login</h2>
+          <br />
+          <br />
+          <GoogleLogin
+            onSuccess={responseMessage}
+            onError={errorMessage}
+          />
+        </div>
       </div>
     );
   }
@@ -78,3 +58,4 @@ const HomePage = () => {
 };
 
 export default HomePage;
+

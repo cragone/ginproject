@@ -1,11 +1,10 @@
 package handlers
 
 import (
+	"context"
 	"log"
 	"net/http"
 	"os"
-	"server/functions"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -16,46 +15,51 @@ import (
 func init() {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatalf("error getting .env file for google auth: %v", err)
+		log.Fatalf("Error loading .env file: %v", err)
+	}
+
+	clientID := os.Getenv("CLIENT_ID")
+	clientSecret := os.Getenv("CLIENT_SECRET")
+	redirectURI := os.Getenv("REDIRECT_URI")
+
+	if clientID == "" || clientSecret == "" || redirectURI == "" {
+		log.Fatalf("Environment variables CLIENT_ID, CLIENT_SECRET, or REDIRECT_URI are not set")
+	}
+
+	oauth2Config = &oauth2.Config{
+		ClientID:     clientID,
+		ClientSecret: clientSecret,
+		RedirectURL:  redirectURI,
+		Endpoint:     google.Endpoint,
 	}
 }
 
-type token struct {
-	AccessToken  string    `json:"access_token"`
-	RefreshToken string    `json:"refresh_token"`
-	Expiry       time.Time `json:"expiry"`
+var oauth2Config *oauth2.Config
+
+type CodeRequest struct {
+	Code string `json:"code"`
 }
 
-var oauth2Config = &oauth2.Config{
-	ClientID:     os.Getenv("CLIENT_ID"),
-	ClientSecret: os.Getenv("CLIENT_SECRET"),
-	RedirectURL:  "http://localhost:8080/auth/callback",
-	Scopes:       []string{"https://www.googleapis.com/auth/userinfo.email"},
-	Endpoint:     google.Endpoint,
-}
-
-func handleGoogleLogin(c *gin.Context) {
-	url := oauth2Config.AuthCodeURL("state-token", oauth2.AccessTypeOffline)
-	c.Redirect(http.StatusTemporaryRedirect, url)
-}
-
-func handleGoogleCallback(c *gin.Context) {
-	code := c.Query("code")
-	ctx := c.Request.Context()
-	token, err := oauth2Config.Exchange(ctx, code)
-	if err != nil {
-		log.Printf("error exchanging the code: %v", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "token exchange failed"})
+func HandleExchangeCode(c *gin.Context) {
+	var codeRequest CodeRequest
+	if err := c.ShouldBindJSON(&codeRequest); err != nil {
+		log.Printf("Error binding JSON: %v", err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request payload", "details": err.Error()})
 		return
 	}
 
-	Tokens, err := functions.SaveTokenToDB(token.AccessToken, token.RefreshToken, &token.Expiry)
+	// Log the authorization code to verify it is being received correctly
+	log.Printf("Authorization Code: %s", codeRequest.Code)
+
+	token, err := oauth2Config.Exchange(context.Background(), codeRequest.Code)
 	if err != nil {
-		log.Printf("error saving token to database: %v", err)
-		c.JSON(400, gin.H{"error": err.Error()})
+		log.Printf("Error exchanging code for token: %v", err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": "failed to exchange code for token", "details": err.Error()})
 		return
 	}
 
-	c.JSON(200, gin.H{
-		"updated token": Tokens})
+	c.JSON(http.StatusOK, gin.H{
+		"access_token": token.AccessToken,
+		"id_token":     token.Extra("id_token"),
+	})
 }

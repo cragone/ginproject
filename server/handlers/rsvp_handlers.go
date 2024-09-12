@@ -8,9 +8,9 @@ import (
 )
 
 type RsvpRequest struct {
-	FirstName string `json:"f_name"binding:"required"`
-	LastName  string `json:"l_name"binding:"required"`
-	Rsvp      bool   `json:"rsvp"binding:"required"`
+	FirstName string `json:"f_name"`
+	LastName  string `json:"l_name"`
+	Rsvp      bool   `json:"rsvp"`
 }
 
 func HandlePostRsvpDecision(c *gin.Context) {

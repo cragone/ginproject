@@ -31,6 +31,6 @@ func SaveTokenToDB(accessToken, refreshToken string, expiry *time.Time) (Tokens,
 	return Tokens{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
-		Expiry:       expiry,
+		Expiry:       *expiry, //dereference the pointer.
 	}, nil
 }

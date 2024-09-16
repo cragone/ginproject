@@ -40,8 +40,8 @@ func main() {
 
 	auth := r.Group("/auth")
 	{
-		auth.POST("/google/login", auth.handleGoogleLogin)
-		auth.POST("/callback", auth.handleGoogleCallback)
+		auth.POST("/google/login", auth.HandleGoogleLogin)
+		auth.POST("/callback", auth.HandleGoogleCallback)
 	}
 
 	rsvp := r.Group("/rsvp")

@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"server/handlers"
-	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -29,7 +28,7 @@ func main() {
 		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
-		MaxAge:           24 * time.Hour,
+		// MaxAge:           24 * time.Hour, // Remove this line to turn off the time limit
 	}))
 
 	// r.GET("/", func(c *gin.Context) {

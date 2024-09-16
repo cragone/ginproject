@@ -20,7 +20,7 @@ func RsvpAdded(firstName, lastName string, rsvp bool) (rsvps []Rsvp, err error) 
 
 	query := `
 		UPDATE
-			attendees
+			wedding_info
 		SET 
 			rsvp = $1
 		WHERE
@@ -37,7 +37,7 @@ func RsvpAdded(firstName, lastName string, rsvp bool) (rsvps []Rsvp, err error) 
 		SELECT
 			f_name, l_name, rsvp
 		FROM
-			attendees
+			wedding_info
 		WHERE
 			f_name = $1 
 		AND

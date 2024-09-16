@@ -1,62 +1,61 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from "react";
+import InviteList from "../components/InviteList";
+import RsvpToWedding from "../components/RsvpToWedding";
+import { GoogleLogin } from '@react-oauth/google'; // Import the GoogleLogin component
+import axios from 'axios'; // Import axios
 
+const HomePage = () => {
+  const [oneTimeCode, setOneTimeCode] = useState(null);
+  const apiRoute = "localhost:8080"; // Define your API route here
 
+  const responseMessage = async (response) => {
+    console.log("One-time code:", response.code);
+    setOneTimeCode(response.code);
 
+    try {
+      // Send the one-time code to your Go Gin server
+      const res = await axios.post(`http://${apiRoute}/auth/exchangecode`, {
+        code: response.code
+      });
+      console.log("Server response:", res.data);
+    } catch (error) {
+      console.error("Error sending one-time code to server:", error.response ? error.response.data : error.message);
+    }
+  };
 
+  const errorMessage = (error) => {
+    console.error("Login Failed:", error);
+  };
 
-
-
-
-const LoginPage = () => {
-
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [authCode, setAuthCode] = useState(null);
-    const [accessToken, setAccessToken] = useState(null);
-    const googleClientId = import.meta.env.VITE_APP_CLIENT_ID;
-    const googleRedirectUri = import.meta.env.VITE_APP_REDIRECT_URI
-
-
-    useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const code = urlParams.get('code');
-        setAuthCode(code);
-    }, []);
-
-    useEffect(() => {
-        if (authCode) {
-            // Send auth code to backend to verify and exchange for access token
-            fetch('/api/auth/google', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ code: authCode }),
-            })
-                .then(response => response.json())
-                .then(data => {
-                    setAccessToken(data.accessToken);
-                });
-        }
-    }, [authCode]);
-
-    const handleLogin = () => {
-        window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${googleClientId}&redirect_uri=${googleRedirectUri}&response_type=code&scope=openid+email+profile`;
-    };
-
+  if (!oneTimeCode) {
     return (
-        <div className="grid h-screen place-items-center">
-            {accessToken ? (
-                <div>
-                    <p>Authenticated successfully!</p>
-                    <p>Access Token: {accessToken}</p>
-                </div>
-            ) : (
-                <button onClick={handleLogin}>Login with Google</button>
-            )}
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="justify-items-center">
+          <h2>React Google Login</h2>
+          <br />
+          <br />
+          <GoogleLogin
+            onSuccess={responseMessage}
+            onError={errorMessage}
+            flow="auth-code" // Ensure you are using the authorization code flow
+          />
         </div>
+      </div>
     );
+  }
+
+  // Render wedding components only after login
+  return (
+    <div className="flex min-h-screen bg-gray-100">
+      <div className="w-1/2 flex flex-col items-center justify-center">
+        <RsvpToWedding />
+      </div>
+      <div className="w-1/2 flex flex-col items-center justify-center">
+        <h1 className="text-2xl font-bold mb-4">Your Wedding List</h1>
+        <InviteList />
+      </div>
+    </div>
+  );
 };
 
-
-
-export default LoginPage;
+export default HomePage;

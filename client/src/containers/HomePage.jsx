@@ -5,43 +5,9 @@ import { GoogleLogin } from '@react-oauth/google'; // Import the GoogleLogin com
 import axios from 'axios'; // Import axios
 
 const HomePage = () => {
-  const [oneTimeCode, setOneTimeCode] = useState(null);
   const apiRoute = "localhost:8080"; // Define your API route here
 
-  const responseMessage = async (response) => {
-    console.log("One-time code:", response.credential);
-    setOneTimeCode(response.credential);
-
-    try {
-      // Send the one-time code to your Go Gin server
-      const res = await axios.post(`http://${apiRoute}/auth/exchangecode`, {
-        code: response.credential
-      });
-      console.log("Server response:", res.data);
-    } catch (error) {
-      console.error("Error sending one-time code to server:", error.response ? error.response.data : error.message);
-    }
-  };
-
-  const errorMessage = (error) => {
-    console.error("Login Failed:", error);
-  };
-
-  if (!oneTimeCode) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="justify-items-center">
-          <h2>React Google Login</h2>
-          <br />
-          <br />
-          <GoogleLogin
-            onSuccess={responseMessage}
-            onError={errorMessage}
-          />
-        </div>
-      </div>
-    );
-  }
+ 
 
   // Render wedding components only after login
   return (
@@ -58,4 +24,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-

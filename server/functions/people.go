@@ -50,3 +50,49 @@ func GetAttendeeInformation() (attendees []AttendeeInfo, err error) {
 	return attendees, nil
 
 }
+
+func AddNewAttendee(attendee AttendeeInfo) (attendees []AttendeeInfo, err error) {
+	// Establish a connection to the database
+	db, err := networkconn.GetDB()
+	if err != nil {
+		return nil, fmt.Errorf("error connecting to db: %v", err)
+	}
+	defer db.Close()
+
+	// Define the SQL insert statement
+	query := `
+		INSERT INTO attendees (f_name, l_name, email, phone_number, rsvp)
+		VALUES ($1, $2, $3, $4, $5);
+	`
+
+	// Execute the insert statement
+	_, err = db.Exec(query, attendee.FirstName, attendee.LastName, attendee.Email, attendee.PhoneNumber, attendee.Rsvp)
+	if err != nil {
+		return nil, fmt.Errorf("error inserting attendee: %v", err)
+	}
+
+	// Fetch all attendees to return the updated list
+	rows, err := db.Query("SELECT f_name, l_name, email, phone_number, rsvp FROM attendees")
+	if err != nil {
+		return nil, fmt.Errorf("error querying attendees: %v", err)
+	}
+	defer rows.Close()
+
+	// Populate the list of attendees
+	for rows.Next() {
+		var p AttendeeInfo
+		err = rows.Scan(&p.FirstName, &p.LastName, &p.Email, &p.PhoneNumber, &p.Rsvp)
+		if err != nil {
+			return nil, fmt.Errorf("error scanning row: %v", err)
+		}
+		attendees = append(attendees, p)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, fmt.Errorf("error with rows: %v", err)
+	}
+
+	fmt.Println("new attendee added:", attendees)
+
+	return attendees, nil
+}

@@ -36,6 +36,7 @@ const RsvpToWedding = () => {
         setRsvp("");
         console.log(response)
         alert("rsvp made")
+
       })
       .catch((error) => {
         console.log("RSVP failed:",error)

@@ -7,13 +7,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type NewAttendee struct {
-	FirstName   string `json:"f_name"`
-	LastName    string `json:"l_name"`
-	Email       string `json:"email"`
-	PhoneNumber string `json:"phone_number"`
-	Rsvp        bool   `json:"rsvp"`
-}
+// i think this is redundant.
+// type NewAttendee struct {
+// 	FirstName   string `json:"f_name"`
+// 	LastName    string `json:"l_name"`
+// 	Email       string `json:"email"`
+// 	PhoneNumber string `json:"phone_number"`
+// 	Rsvp        bool   `json:"rsvp"`
+// }
 
 func HandleGetAllAttendees(c *gin.Context) {
 	fmt.Print("handler function running is get all attendees")
@@ -32,7 +33,7 @@ func HandleGetAllAttendees(c *gin.Context) {
 func HandleAddAttendee(c *gin.Context) {
 	fmt.Println("Running handler to add new attendee")
 
-	var newAttendee NewAttendee
+	var newAttendee functions.AttendeeInfo
 	if err := c.BindJSON(&newAttendee); err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return

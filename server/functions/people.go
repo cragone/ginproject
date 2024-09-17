@@ -25,7 +25,7 @@ func GetAttendeeInformation() (attendees []AttendeeInfo, err error) {
 		SELECT
 			f_name, l_name, email, phone_number, rsvp
 		FROM
-			wedding_info`
+			attendees`
 	rows, err := db.Query(query)
 	if err != nil {
 		return nil, err
@@ -95,4 +95,19 @@ func AddNewAttendee(attendee AttendeeInfo) (attendees []AttendeeInfo, err error)
 	fmt.Println("new attendee added:", attendees)
 
 	return attendees, nil
+}
+
+func RemoveAttendee(attendee AttendeeInfo) (attendees []AttendeeInfo, err error) {
+	//creating the db connection
+	db, err := networkconn.GetDB()
+	if err != nil {
+		return nil, fmt.Errorf("error connecting to the database: %v", err)
+	}
+	defer db.Close()
+
+	//construct the query
+
+	//execute the query
+
+	//check the result
 }

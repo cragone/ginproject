@@ -31,12 +31,6 @@ func main() {
 		// MaxAge:           24 * time.Hour, // Remove this line to turn off the time limit
 	}))
 
-	// r.GET("/", func(c *gin.Context) {
-	// 	c.JSON(http.StatusOK, gin.H{
-	// 		"message": "Hello, Regeneron",
-	// 	})
-	// })
-
 	auth := r.Group("/auth")
 	{
 		auth.POST("/exchangecode", handlers.HandleExchangeCode)
@@ -51,6 +45,7 @@ func main() {
 	people := r.Group("/attendees")
 	{
 		people.GET("/displayed", handlers.HandleGetAllAttendees)
+		people.POST("/newattendee", handlers.HandleAddAttendee)
 	}
 
 	r.NoRoute(func(c *gin.Context) {

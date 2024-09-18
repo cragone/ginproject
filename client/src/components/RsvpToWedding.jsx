@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 
-//will need a handle submit, relay to both the yes and no components. 
-//upon clicking one it will handle the submit
-//it will bind the yes or the no to the data depending on decision.
+//need to update this so it is not case sensitive.
 
 const RsvpToWedding = () => {
   const apiRoute = "localhost";
@@ -36,6 +34,7 @@ const RsvpToWedding = () => {
         setRsvp("");
         console.log(response)
         alert("rsvp made")
+        window.location.reload()
 
       })
       .catch((error) => {

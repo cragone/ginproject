@@ -51,15 +51,23 @@ func HandleAttendeeRemoval(c *gin.Context) {
 
 	var delAttendee functions.AttendeeInfo
 	if err := c.BindJSON(&delAttendee); err != nil {
+		fmt.Println("error binding JSON:", err)
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
 
-	attendee, err := functions.RemoveAttendee(delAttendee)
+	fmt.Println("attendee to remove:", delAttendee)
+
+	attendee, err := functions.RemoveAttendee(functions.AttendeeInfo{
+		FirstName: delAttendee.FirstName,
+		LastName:  delAttendee.LastName,
+	})
 	if err != nil {
+		fmt.Println("error removing attendee:", err)
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
 
+	fmt.Println("attendee removed:", attendee)
 	c.JSON(200, gin.H{"removed_attendee": attendee})
 }

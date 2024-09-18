@@ -7,15 +7,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// i think this is redundant.
-// type NewAttendee struct {
-// 	FirstName   string `json:"f_name"`
-// 	LastName    string `json:"l_name"`
-// 	Email       string `json:"email"`
-// 	PhoneNumber string `json:"phone_number"`
-// 	Rsvp        bool   `json:"rsvp"`
-// }
-
 func HandleGetAllAttendees(c *gin.Context) {
 	fmt.Print("handler function running is get all attendees")
 
@@ -53,4 +44,22 @@ func HandleAddAttendee(c *gin.Context) {
 	}
 
 	c.JSON(200, gin.H{"added_attendee": attendee})
+}
+
+func HandleAttendeeRemoval(c *gin.Context) {
+	fmt.Println("removal handler now running")
+
+	var delAttendee functions.AttendeeInfo
+	if err := c.BindJSON(&delAttendee); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+
+	attendee, err := functions.RemoveAttendee(delAttendee)
+	if err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(200, gin.H{"removed_attendee": attendee})
 }

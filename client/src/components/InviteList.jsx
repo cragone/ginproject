@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const InviteList = () => {
-  const apiRoute = "localhost";
+  const apiRoute = "localhost:8080";
   const [attendees, setAttendees] = useState([]);
   const [error, setError] = useState("");
 
   useEffect(() => {
     axios
-      .get(`http://${apiRoute}:8080/attendees/displayed`)
+      .get(`http://${apiRoute}/attendees/displayed`)
       .then((response) => {
         console.log("API Response:", response.data);
         if (Array.isArray(response.data)) {
@@ -49,6 +49,12 @@ const InviteList = () => {
               <td>{attendee.email}</td>
               <td>{attendee.phone_number}</td>
               <td>{attendee.rsvp ? "Yes" : "No"}</td>
+              <td>
+              <DeleteButton 
+              firstName= {attendee.f_name}
+              lastName={attendee.l_name}
+              apiRoute={apiRoute}/>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -69,3 +75,34 @@ const InviteList = () => {
 };
 
 export default InviteList;
+
+
+const DeleteButton = ({firstName, lastName, apiRoute}) => {
+  const handleSubmit = async () => {
+    const jsonData = {
+      f_name: firstName,
+      l_name: lastName
+    }
+    console.log(jsonData)
+    axios
+      .delete(`http://${apiRoute}/attendees/deleteattendee`, 
+        jsonData, {
+        "Content-Type": "application/json" }
+      )
+      .then((response) => {
+        console.log(response)
+        alert("attendee removed from list")
+      })
+      .catch((error) => {
+        console.log("attendee removal failed:", error)
+        alert("could not remove attendee")
+      })
+  }
+
+  return (
+    <button
+    className="btn btn-glass btn-alert hover:bg-primary"
+    onClick={handleSubmit}>Remove</button>
+  )
+
+}

@@ -97,17 +97,32 @@ func AddNewAttendee(attendee AttendeeInfo) (attendees []AttendeeInfo, err error)
 	return attendees, nil
 }
 
-func RemoveAttendee(attendee AttendeeInfo) (attendees []AttendeeInfo, err error) {
-	//creating the db connection
+// need to change database to use serial id for the attendees.
+func RemoveAttendee(attendee AttendeeInfo) ([]AttendeeInfo, error) {
+	// Creating the db connection
 	db, err := networkconn.GetDB()
 	if err != nil {
 		return nil, fmt.Errorf("error connecting to the database: %v", err)
 	}
 	defer db.Close()
 
-	//construct the query
+	// Construct the query for the db
+	query := `
+	DELETE FROM
+		attendees
+	WHERE
+		f_name = $1
+	AND
+		l_name = $2
+	`
 
-	//execute the query
+	// Execute the query
+	_, err = db.Exec(query, attendee.FirstName, attendee.LastName)
+	if err != nil {
+		return nil, fmt.Errorf("couldn't execute delete query: %v", err)
+	}
 
-	//check the result
+	fmt.Println("attendee removed from list")
+
+	return nil, nil
 }

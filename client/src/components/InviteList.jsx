@@ -51,7 +51,7 @@ const InviteList = () => {
               <td>{attendee.rsvp ? "Yes" : "No"}</td>
               <td>
               <DeleteButton 
-              firstName= {attendee.f_name}
+              firstName={attendee.f_name}
               lastName={attendee.l_name}
               apiRoute={apiRoute}/>
               </td>
@@ -77,32 +77,38 @@ const InviteList = () => {
 export default InviteList;
 
 
-const DeleteButton = ({firstName, lastName, apiRoute}) => {
+const DeleteButton = ({ firstName, lastName, apiRoute }) => {
   const handleSubmit = async () => {
     const jsonData = {
       f_name: firstName,
       l_name: lastName
-    }
-    console.log(jsonData)
+    };
+    console.log(jsonData);
+
     axios
-      .delete(`http://${apiRoute}/attendees/deleteattendee`, 
-        jsonData, {
-        "Content-Type": "application/json" }
-      )
+      .delete(`http://${apiRoute}/attendees/deleteattendee`, {
+        data: jsonData,
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
       .then((response) => {
-        console.log(response)
-        alert("attendee removed from list")
+        console.log(response);
+        alert("attendee removed from list");
+        window.location.reload();
       })
       .catch((error) => {
-        console.log("attendee removal failed:", error)
-        alert("could not remove attendee")
-      })
-  }
+        console.log("attendee removal failed:", error);
+        alert("could not remove attendee");
+      });
+  };
 
   return (
     <button
-    className="btn btn-glass btn-alert hover:bg-primary"
-    onClick={handleSubmit}>Remove</button>
-  )
-
-}
+      className="btn btn-glass btn-alert hover:bg-primary"
+      onClick={handleSubmit}
+    >
+      Remove
+    </button>
+  );
+};

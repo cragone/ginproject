@@ -5,6 +5,7 @@ import (
 	"server/functions"
 
 	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
 )
 
 // follow this function to new_user.go for the query
@@ -17,6 +18,16 @@ func HandleCreateUser(c *gin.Context) {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
+
+	//Hash the password
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(newUser.UserPassword), bcrypt.DefaultCost)
+	if err != nil {
+		c.JSON(400, gin.H{"error": "error hashing the password"})
+		return
+	}
+
+	//update user info struct with hashed password
+	newUser.UserPassword = string(hashedPassword)
 
 	//binds the json data to the user info struct in new_user.go
 	user, err := functions.AddNewUser(functions.UserInformation{

@@ -33,6 +33,12 @@ func main() {
 		// MaxAge:           24 * time.Hour, // Remove this line to turn off the time limit
 	}))
 
+	// auth routes
+	user := r.Group("/auth")
+	{
+		user.POST("/usercreated", handlers.HandleCreateUser)
+	}
+
 	// RSVP routes
 	rsvp := r.Group("/rsvp")
 	{

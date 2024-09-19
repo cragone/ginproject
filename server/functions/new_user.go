@@ -7,7 +7,7 @@ import (
 
 type UserInformation struct {
 	UserEmail     string `json:"user_email"`
-	UserPassword  string `json:"hashed_password"`
+	UserPassword  string `json:"hashpassword"`
 	UserFname     string `json:"user_fname"`
 	UserLname     string `json:"user_lname"`
 	PasswordReset string `json:"password_reset"`
@@ -28,7 +28,7 @@ func AddNewUser(user UserInformation) (UserInformation, error) {
 	VALUES 
 		($1, $2, $3, $4)`
 
-	_, err = db.Exec(query, user.UserEmail, user.UserPassword, user.UserFname, user.UserLname)
+	_, err = db.Exec(query, user.UserEmail, user.UserFname, user.UserLname, user.UserPassword)
 	if err != nil {
 		return UserInformation{}, fmt.Errorf("couldn't insert new user: %v", err)
 	}

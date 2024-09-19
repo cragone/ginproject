@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"server/handlers"
 
 	"github.com/gin-contrib/cors"
@@ -20,9 +19,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	clientID := os.Getenv("CLIENT_ID")
-	clientSecret := os.Getenv("CLIENT_SECRET")
-	redirectURI := os.Getenv("REDIRECT_URI")
 
 	// Load HTML templates
 	r.LoadHTMLGlob("dist/*.html")

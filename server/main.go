@@ -31,12 +31,6 @@ func main() {
 		// MaxAge:           24 * time.Hour, // Remove this line to turn off the time limit
 	}))
 
-	auth := r.Group("/auth")
-	{
-		auth.POST("/exchangecode", handlers.HandleExchangeCode)
-
-	}
-
 	rsvp := r.Group("/rsvp")
 	{
 		rsvp.POST("/decided", handlers.HandlePostRsvpDecision)

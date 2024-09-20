@@ -1,43 +1,45 @@
 package handlers
 
-// var userTemplate = `
-// <p><a href="/logout/{{.Provider}}">logout</a></p>
-// <p>Name: {{.Name}} [{{.LastName}}, {{.FirstName}}]</p>
-// <p>Email: {{.Email}}</p>
-// <p>NickName: {{.NickName}}</p>
-// <p>Location: {{.Location}}</p>
-// <p>AvatarURL: {{.AvatarURL}} <img src="{{.AvatarURL}}"></p>
-// <p>Description: {{.Description}}</p>
-// <p>UserID: {{.UserID}}</p>
-// <p>AccessToken: {{.AccessToken}}</p>
-// <p>ExpiresAt: {{.ExpiresAt}}</p>
-// <p>RefreshToken: {{.RefreshToken}}</p>
-// `
+import (
+	"fmt"
+	"server/functions"
 
-// // AuthCallback handles the OAuth callback
-// func AuthCallback(res http.ResponseWriter, req *http.Request) {
-// 	user, err := gothic.CompleteUserAuth(res, req)
-// 	if err != nil {
-// 		fmt.Fprintln(res, err)
-// 		return
-// 	}
-// 	t, _ := template.New("user").Parse(userTemplate)
-// 	t.Execute(res, user)
-// }
+	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
+)
 
-// // AuthBegin starts the authentication process
-// func AuthBegin(res http.ResponseWriter, req *http.Request) {
-// 	if gothUser, err := gothic.CompleteUserAuth(res, req); err == nil {
-// 		t, _ := template.New("user").Parse(userTemplate)
-// 		t.Execute(res, gothUser)
-// 	} else {
-// 		gothic.BeginAuthHandler(res, req)
-// 	}
-// }
+// follow this function to new_user.go for the query
+// this is the new user flow that creates users
+func HandleCreateUser(c *gin.Context) {
+	fmt.Println("new user handler called")
 
-// // Logout handles user logout
-// func Logout(res http.ResponseWriter, req *http.Request) {
-// 	gothic.Logout(res, req)
-// 	res.Header().Set("Location", "/")
-// 	res.WriteHeader(http.StatusTemporaryRedirect)
-// }
+	var newUser functions.UserInformation
+	if err := c.BindJSON(&newUser); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+
+	//Hash the password
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(newUser.UserPassword), bcrypt.DefaultCost)
+	if err != nil {
+		c.JSON(400, gin.H{"error": "error hashing the password"})
+		return
+	}
+
+	//update user info struct with hashed password
+	newUser.UserPassword = string(hashedPassword)
+
+	//binds the json data to the user info struct in new_user.go
+	user, err := functions.AddNewUser(functions.UserInformation{
+		UserEmail:    newUser.UserEmail,
+		UserFname:    newUser.UserFname,
+		UserLname:    newUser.UserLname,
+		UserPassword: newUser.UserPassword,
+	})
+	if err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(200, gin.H{"added_user": user})
+}

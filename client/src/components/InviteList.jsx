@@ -26,51 +26,52 @@ const InviteList = () => {
   }, []); // Empty dependency array to run only once on mount
 
   return (
-    <div className="overflow-x-auto">
-      {error && <p>{error}</p>}
-      <table className="table table-xs table-pin-rows table-pin-cols">
-        <thead>
-          <tr>
-            <th></th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Email</th>
-            <th>Phone Number</th>
-            <th>RSVP</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {attendees.map((attendee, index) => (
-            <tr key={index}>
-              <th>{index + 1}</th>
-              <td>{attendee.f_name}</td>
-              <td>{attendee.l_name}</td>
-              <td>{attendee.email}</td>
-              <td>{attendee.phone_number}</td>
-              <td>{attendee.rsvp ? "Yes" : "No"}</td>
-              <td>
-              <DeleteButton 
+    <div className="overflow-x-auto bg-neutral p-4 rounded-lg shadow-md">
+  {error && <p className="text-error">{error}</p>}
+  <table className="table table-xs table-pin-rows table-pin-cols text-primary border-accent">
+    <thead>
+      <tr>
+        <th className="bg-secondary text-primary"></th>
+        <th className="bg-secondary text-primary">First Name</th>
+        <th className="bg-secondary text-primary">Last Name</th>
+        <th className="bg-secondary text-primary">Email</th>
+        <th className="bg-secondary text-primary">Phone Number</th>
+        <th className="bg-secondary text-primary">RSVP</th>
+        <th className="bg-secondary text-primary"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {attendees.map((attendee, index) => (
+        <tr key={index} className="hover:bg-accent">
+          <th className="text-secondary">{index + 1}</th>
+          <td>{attendee.f_name}</td>
+          <td>{attendee.l_name}</td>
+          <td>{attendee.email}</td>
+          <td>{attendee.phone_number}</td>
+          <td>{attendee.rsvp ? "Yes" : "No"}</td>
+          <td>
+            <DeleteButton 
               firstName={attendee.f_name}
               lastName={attendee.l_name}
-              apiRoute={apiRoute}/>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-        <tfoot>
-          <tr>
-            <th></th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Email</th>
-            <th>Phone Number</th>
-            <th>RSVP</th>
-            <th></th>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
+              apiRoute={apiRoute}
+            />
+          </td>
+        </tr>
+      ))}
+    </tbody>
+    <tfoot>
+      <tr>
+        <th className="bg-secondary text-primary"></th>
+        <th className="bg-secondary text-primary">First Name</th>
+        <th className="bg-secondary text-primary">Last Name</th>
+        <th className="bg-secondary text-primary">Email</th>
+        <th className="bg-secondary text-primary">Phone Number</th>
+        <th className="bg-secondary text-primary">RSVP</th>
+        <th className="bg-secondary text-primary"></th>
+      </tr>
+    </tfoot>
+  </table>
+</div>
   );
 };
 
@@ -105,10 +106,11 @@ const DeleteButton = ({ firstName, lastName, apiRoute }) => {
 
   return (
     <button
-      className="btn btn-glass btn-alert hover:bg-primary"
-      onClick={handleSubmit}
-    >
-      Remove
-    </button>
+    className="btn btn-glass btn-error hover:bg-error-focus text-white"
+    onClick={handleSubmit}
+  >
+    Remove
+  </button>
+  
   );
 };

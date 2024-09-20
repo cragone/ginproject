@@ -41,68 +41,73 @@ const HomePage = () => {
 
   // Render wedding components only after login
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100">
-      
-        
-      <div className="flex flex-1">
-      {/* <h1 className="text-xl font-bold mb-2">The Simple Wedding</h1> */}
-        <div className="w-1/2 flex flex-col items-center justify-center">
-          <RsvpToWedding />
-        </div>
-        <div className="w-1/2 flex flex-col items-center justify-center">
-          <h1 className="text-2xl font-bold mb-4">Your Wedding List</h1>
-          <InviteList />
-        </div>
-      </div>
-      <div className="flex flex-col items-center justify-center mt-auto mb-4">
-        <h1 className="text-xl font-bold mb-2">Add New Invites</h1>
-        
-        <input 
-          type="text"
-          placeholder="First Name"
-          className="p-2 border border-gray-300 rounded"
-          value={firstName}
-          onChange={(e) => {
-            setFirstName(e.target.value)
-          }}
-        />
-        <input 
-          type="text"
-          placeholder="Last Name"
-          className="p-2 border border-gray-300 rounded"
-          value={lastName}
-          onChange={(e) => {
-            setLastName(e.target.value)
-          }}
-        />
-        <input 
-          type="text"
-          placeholder="Email"
-          className="p-2 border border-gray-300 rounded"
-          value={email}
-          onChange={(e) => {
-            setEmail(e.target.value)
-          }}
-        />
-        <input 
-          type="text"
-          placeholder="Phone Number"
-          className="p-2 border border-gray-300 rounded"
-          value={phoneNumber}
-          onChange={(e) => {
-            setPhoneNumber(e.target.value)
-          }}
-        />
-        <button
-        className="btn btn-glass btn-sm"
-        onClick={handleSubmit}
-        disabled={
-          firstName === "" || lastName === "" || email === "" || phoneNumber === "" 
-        }>
-          Submit
-        </button>
-      </div>
+    <div className="flex flex-col min-h-screen bg-base-100">
+  {/* Main Content Area */}
+  <div className="flex flex-1">
+    {/* RSVP Section */}
+    <div className="w-1/2 flex flex-col items-center justify-center bg-neutral p-8 rounded-l-lg shadow-md">
+      {/* <h1 className="text-3xl font-bold text-primary mb-4">RSVP to the Wedding</h1> */}
+      <RsvpToWedding />
     </div>
+
+    {/* Wedding List Section */}
+    <div className="w-1/2 flex flex-col items-center justify-center bg-neutral p-8 rounded-r-lg shadow-md">
+      <h1 className="text-3xl font-bold text-primary mb-4">Your Wedding List</h1>
+      <InviteList />
+    </div>
+  </div>
+
+  {/* Add New Invites Section */}
+  <div className="flex flex-col items-center justify-center mt-auto mb-4 p-6 bg-base-100">
+    <h1 className="text-2xl font-bold text-primary mb-4">Add New Invites</h1>
+
+    {/* First Name Input */}
+    <input
+      type="text"
+      placeholder="First Name"
+      className="input input-bordered border-secondary focus:border-accent w-full max-w-xs mb-4"
+      value={firstName}
+      onChange={(e) => setFirstName(e.target.value)}
+    />
+
+    {/* Last Name Input */}
+    <input
+      type="text"
+      placeholder="Last Name"
+      className="input input-bordered border-secondary focus:border-accent w-full max-w-xs mb-4"
+      value={lastName}
+      onChange={(e) => setLastName(e.target.value)}
+    />
+
+    {/* Email Input */}
+    <input
+      type="text"
+      placeholder="Email"
+      className="input input-bordered border-secondary focus:border-accent w-full max-w-xs mb-4"
+      value={email}
+      onChange={(e) => setEmail(e.target.value)}
+    />
+
+    {/* Phone Number Input */}
+    <input
+      type="text"
+      placeholder="Phone Number"
+      className="input input-bordered border-secondary focus:border-accent w-full max-w-xs mb-4"
+      value={phoneNumber}
+      onChange={(e) => setPhoneNumber(e.target.value)}
+    />
+
+    {/* Submit Button */}
+    <button
+      className="btn btn-primary bg-primary hover:bg-primary-focus text-white"
+      onClick={handleSubmit}
+      disabled={firstName === "" || lastName === "" || email === "" || phoneNumber === ""}
+    >
+      Submit
+    </button>
+  </div>
+</div>
+
   );
 };
 

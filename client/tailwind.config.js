@@ -13,15 +13,15 @@ export default {
     themes: [
       {
         wedding: {
-          "primary": "#E9D8A6",   // Soft gold accent color
-          "secondary": "#F4E1D2", // Light peach for background and accents
-          "accent": "#A6C9C9",    // Soft muted teal for accents
-          "neutral": "#FDF5F1",   // Off-white for background
-          "base-100": "#FFFFFF",  // Pure white for main areas
-          "info": "#A0DDE6",      // Light blue for info elements
-          "success": "#A6D4B6",   // Muted green for success elements
-          "warning": "#EACDA3",   // Soft yellow for warning elements
-          "error": "#E58A8A",     // Light pinkish red for errors
+          "primary": "#F4978E",   // Soft pastel pink for main elements (e.g., buttons)
+          "secondary": "#F9C5D1", // Lighter blush pink for secondary backgrounds
+          "accent": "#FFDFD3",    // Soft peach for accent areas (e.g., borders)
+          "neutral": "#FFFFFF",   // Pure white for card backgrounds and form elements
+          "base-100": "#FCE4EC",  // Very light pink for overall background
+          "info": "#A7BED3",      // Muted light blue for info messages
+          "success": "#A6E3E9",   // Soft teal for success elements
+          "warning": "#FAD6A5",   // Soft gold for warning elements
+          "error": "#FFB3B3",     // Pastel red for error messages
         },
       },
       "light", // Include default light theme

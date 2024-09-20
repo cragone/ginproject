@@ -6,9 +6,11 @@ import (
 )
 
 type Rsvp struct {
-	FirstName string `json:"f_name"`
-	LastName  string `json:"l_name"`
-	Rsvp      bool   `json:"rsvp"`
+	FirstName  string `json:"f_name"`
+	LastName   string `json:"l_name"`
+	Rsvp       bool   `json:"rsvp"`
+	WeddingID  int    `json:"wedding_id"`
+	AttendeeID int    `json:"attendee"`
 }
 
 func RsvpAdded(firstName, lastName string, rsvp bool) (rsvps []Rsvp, err error) {

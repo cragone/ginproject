@@ -1,6 +1,7 @@
 package functions
 
 import (
+	"database/sql"
 	"fmt"
 	"server/networkconn"
 )
@@ -12,6 +13,34 @@ type UserInformation struct {
 	UserLname     string `json:"user_lname"`
 	PasswordReset string `json:"password_reset"`
 	WeddingID     int    `json:"wedding_id"`
+}
+
+func GetUserByEmail(email string) (UserInformation, error) {
+	db, err := networkconn.GetDB()
+	if err != nil {
+		return UserInformation{}, err
+	}
+	defer db.Close()
+
+	var user UserInformation
+	query := `
+    SELECT
+        user_email, hashpassword, user_fname, user_lname, wedding_id
+    FROM
+        user_info
+    WHERE
+        user_email = $1`
+
+	err = db.QueryRow(query, email).Scan(&user.UserEmail, &user.UserPassword, &user.UserFname, &user.UserLname, &user.WeddingID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return UserInformation{}, fmt.Errorf("user not found")
+		}
+		return UserInformation{}, fmt.Errorf("couldn't select user info: %v", err)
+	}
+
+	fmt.Println("user found")
+	return user, nil
 }
 
 func AddNewUser(user UserInformation) (UserInformation, error) {

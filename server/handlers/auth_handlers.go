@@ -43,3 +43,42 @@ func HandleCreateUser(c *gin.Context) {
 
 	c.JSON(200, gin.H{"added_user": user})
 }
+
+// handler function for logging in:
+// we need to receive the user email and password
+// verify it against the encrypted password at the set email
+// return the user information + a session token.
+func HandleUserLogin(c *gin.Context) {
+	fmt.Println("logging in")
+
+	// Setting a variable to bind the data to a struct and check email/password.
+	var currentUser functions.UserInformation
+	if err := c.BindJSON(&currentUser); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Retrieve user information from the database
+	user, err := functions.GetUserByEmail(currentUser.UserEmail)
+	if err != nil {
+		c.JSON(400, gin.H{"error": "Invalid email or password"})
+		return
+	}
+
+	// Compare the provided password with the stored hashed password
+	err = bcrypt.CompareHashAndPassword([]byte(user.UserPassword), []byte(currentUser.UserPassword))
+	if err != nil {
+		c.JSON(400, gin.H{"error": "Invalid email or password"})
+		return
+	}
+
+	// Return the user information if login is successful
+	c.JSON(200, gin.H{
+		"user_email": user.UserEmail,
+		"user_fname": user.UserFname,
+		"user_lname": user.UserLname,
+		"wedding_id": user.WeddingID,
+	})
+
+	fmt.Println("success")
+}

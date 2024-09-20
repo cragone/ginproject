@@ -37,6 +37,7 @@ func main() {
 	user := r.Group("/auth")
 	{
 		user.POST("/usercreated", handlers.HandleCreateUser)
+		user.POST("/loggedin", handlers.HandleUserLogin)
 	}
 
 	// RSVP routes

@@ -15,7 +15,7 @@ const RegisterPage = () => {
       user_fname: fname,
       user_lname: lname,
     };
-    console.log(jsonData);
+    // console.log(jsonData); can't log the password need to hash.
 
     axios
       .post(`http://${apiRoute}/auth/usercreated`, jsonData, {
@@ -30,7 +30,7 @@ const RegisterPage = () => {
         setLname("");
         console.log(response);
         alert("you have subcribed!");
-        window.location.reload();
+        window.location.href ="/";
       })
       .catch((error) => {
         console.log("failed to subscribe:", error);

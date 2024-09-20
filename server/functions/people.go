@@ -11,8 +11,11 @@ type AttendeeInfo struct {
 	Email       string `json:"email"`
 	PhoneNumber string `json:"phone_number"`
 	Rsvp        bool   `json:"rsvp"`
+	WeddingID   int    `json:"wedding_id"`
+	AttendeeID  int    `json:"attendee"`
 }
 
+// this function needs to be updated to be passed a wedding id
 func GetAttendeeInformation() (attendees []AttendeeInfo, err error) {
 	db, err := networkconn.GetDB()
 	if err != nil {
@@ -51,6 +54,7 @@ func GetAttendeeInformation() (attendees []AttendeeInfo, err error) {
 
 }
 
+// needs to insert with wedding id attached.
 func AddNewAttendee(attendee AttendeeInfo) (attendees []AttendeeInfo, err error) {
 	// Establish a connection to the database
 	db, err := networkconn.GetDB()
@@ -98,6 +102,7 @@ func AddNewAttendee(attendee AttendeeInfo) (attendees []AttendeeInfo, err error)
 }
 
 // need to change database to use serial id for the attendees.
+// needs to confirm that it is your wedding id
 func RemoveAttendee(attendee AttendeeInfo) ([]AttendeeInfo, error) {
 	// Creating the db connection
 	db, err := networkconn.GetDB()

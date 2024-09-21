@@ -22,6 +22,11 @@ const LoginPage = () => {
       });
       console.log('Response:', response);
 
+      //locally caching the wedding id and jwt
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("wedding_id", response.data.wedding_id);
+      //use localStorage.getItem() to pull these items back from the cache.
+
       setUserEmail("");
       setUserPassword("");
       alert("You have logged in");

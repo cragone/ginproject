@@ -30,6 +30,7 @@ const LoginPage = () => {
       setUserEmail("");
       setUserPassword("");
       alert("You have logged in");
+      window.location.href="/homepage";
 
     } catch (error) {
       console.log("Incorrect password or username", error);

@@ -49,7 +49,7 @@ func main() {
 	// Attendees routes
 	people := r.Group("/attendees")
 	{
-		people.GET("/displayed", handlers.HandleGetAllAttendees)
+		people.POST("/displayed", handlers.HandleGetAllAttendees)
 		people.POST("/newattendee", handlers.HandleAddAttendee)
 		people.DELETE("/deleteattendee", handlers.HandleAttendeeRemoval)
 	}

@@ -10,7 +10,9 @@ const HomePage = () => {
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const rsvp = false
-  
+  const wedding_id = localStorage.getItem("wedding_id")
+  console.log(wedding_id)
+
   const handleSubmit = async () => {
     const jsonData = {
       f_name: firstName,
@@ -41,24 +43,24 @@ const HomePage = () => {
 
   // Render wedding components only after login
   return (
-    <div className="flex flex-col min-h-screen bg-base-100">
+<div className="flex flex-col min-h-screen bg-base-100">
   {/* Main Content Area */}
-  <div className="flex flex-1">
+  <div className="flex flex-col md:flex-row flex-1">
     {/* RSVP Section */}
-    <div className="w-1/2 flex flex-col items-center justify-center bg-neutral p-8 rounded-l-lg shadow-md">
+    <div className="w-full md:w-1/2 flex flex-col items-center justify-center bg-neutral p-4 md:p-8 rounded-lg md:rounded-l-lg shadow-md">
       {/* <h1 className="text-3xl font-bold text-primary mb-4">RSVP to the Wedding</h1> */}
       <RsvpToWedding />
     </div>
 
     {/* Wedding List Section */}
-    <div className="w-1/2 flex flex-col items-center justify-center bg-neutral p-8 rounded-r-lg shadow-md">
+    <div className="w-full md:w-1/2 flex flex-col items-center justify-center bg-neutral p-4 md:p-8 rounded-lg md:rounded-r-lg shadow-md">
       <h1 className="text-3xl font-bold text-primary mb-4">Your Wedding List</h1>
       <InviteList />
     </div>
   </div>
 
   {/* Add New Invites Section */}
-  <div className="flex flex-col items-center justify-center mt-auto mb-4 p-6 bg-base-100">
+  <div className="flex flex-col items-center justify-center mt-4 mb-4 p-6 bg-base-100">
     <h1 className="text-2xl font-bold text-primary mb-4">Add New Invites</h1>
 
     {/* First Name Input */}
@@ -107,6 +109,7 @@ const HomePage = () => {
     </button>
   </div>
 </div>
+
 
   );
 };

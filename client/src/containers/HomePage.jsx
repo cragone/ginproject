@@ -23,7 +23,7 @@ const HomePage = () => {
       email: email,
       phone_number: phoneNumber,
       rsvp: rsvp,
-      wedding_id: weddingId 
+      wedding_id: parseInt(weddingId) 
     }
     axios
       .post(`http://${apiRoute}/attendees/newattendee`, jsonData, {

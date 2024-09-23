@@ -7,8 +7,6 @@ const InviteList = () => {
   const [error, setError] = useState("");
   const weddingId = localStorage.getItem("wedding_id");
   const token = localStorage.getItem("token");
-  console.log(weddingId);
-  console.log(token);
 
   useEffect(() => {
     if (!weddingId) {

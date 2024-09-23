@@ -45,6 +45,7 @@ func HandleAddAttendee(c *gin.Context) {
 		Email:       newAttendee.Email,
 		PhoneNumber: newAttendee.PhoneNumber,
 		Rsvp:        newAttendee.Rsvp,
+		WeddingID:   newAttendee.WeddingID,
 	})
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})

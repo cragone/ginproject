@@ -8,16 +8,24 @@ import (
 )
 
 func HandleGetAllAttendees(c *gin.Context) {
-	fmt.Print("handler function running is get all attendees")
+	fmt.Println("Handler function 'Get All Attendees' running")
 
-	attendeeList, err := functions.GetAttendeeInformation()
-	if err != nil {
-		fmt.Println("error in Get Attendee Information:", err)
-		c.JSON(400, gin.H{"error": err.Error()})
+	var wedding functions.AttendeeInfo
+	// Assuming the wedding ID is in the request body
+	if err := c.BindJSON(&wedding); err != nil {
+		c.JSON(400, gin.H{"error": "Invalid JSON data: " + err.Error()})
 		return
 	}
 
-	fmt.Println("attendee list:", attendeeList)
+	// Pass only the wedding ID to the function (not the entire struct)
+	attendeeList, err := functions.GetAttendeeInformation(wedding.WeddingID)
+	if err != nil {
+		fmt.Println("Error in Get Attendee Information:", err)
+		c.JSON(500, gin.H{"error": "Unable to fetch attendee information: " + err.Error()})
+		return
+	}
+
+	fmt.Println("Attendee list:", attendeeList)
 	c.JSON(200, gin.H{"attendees": attendeeList})
 }
 

@@ -15,8 +15,8 @@ type AttendeeInfo struct {
 	AttendeeID  int    `json:"attendee"`
 }
 
-// this function needs to be updated to be passed a wedding id
-func GetAttendeeInformation() (attendees []AttendeeInfo, err error) {
+// This function now expects a weddingId (int), not the entire AttendeeInfo struct
+func GetAttendeeInformation(weddingId int) (attendees []AttendeeInfo, err error) {
 	db, err := networkconn.GetDB()
 	if err != nil {
 		return nil, err
@@ -26,10 +26,14 @@ func GetAttendeeInformation() (attendees []AttendeeInfo, err error) {
 
 	query := `
 		SELECT
-			f_name, l_name, email, phone_number, rsvp
+			f_name, l_name, email, phone_number, rsvp, attendee
 		FROM
-			attendees`
-	rows, err := db.Query(query)
+			attendees
+		WHERE
+			wedding_id = $1`
+
+	// Pass the weddingId as an argument to the query
+	rows, err := db.Query(query, weddingId)
 	if err != nil {
 		return nil, err
 	}
@@ -37,10 +41,13 @@ func GetAttendeeInformation() (attendees []AttendeeInfo, err error) {
 
 	for rows.Next() {
 		var a AttendeeInfo
-		err = rows.Scan(&a.FirstName, &a.LastName, &a.Email, &a.PhoneNumber, &a.Rsvp)
+		// Scan 6 fields, not 7 (no need to scan WeddingID again)
+		err = rows.Scan(&a.FirstName, &a.LastName, &a.Email, &a.PhoneNumber, &a.Rsvp, &a.AttendeeID)
 		if err != nil {
 			return nil, err
 		}
+		// Set the wedding ID manually, since we already know it
+		a.WeddingID = weddingId
 		attendees = append(attendees, a)
 	}
 
@@ -48,10 +55,9 @@ func GetAttendeeInformation() (attendees []AttendeeInfo, err error) {
 		return nil, err
 	}
 
-	fmt.Println("fetched attendee data:", attendees)
+	fmt.Println("Fetched attendee data:", attendees)
 
 	return attendees, nil
-
 }
 
 // needs to insert with wedding id attached.

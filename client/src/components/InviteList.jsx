@@ -5,10 +5,23 @@ const InviteList = () => {
   const apiRoute = "localhost:8080";
   const [attendees, setAttendees] = useState([]);
   const [error, setError] = useState("");
+  const weddingId = localStorage.getItem("wedding_id")
+  console.log(weddingId)
 
   useEffect(() => {
+    if (!weddingId) {
+      setError("Wedding ID not found in localStorage");
+      return;
+    }
+    const jsonData = {
+      wedding_id: parseInt(weddingId)
+    }
+
+    // Send wedding_id as part of the request body
     axios
-      .get(`http://${apiRoute}/attendees/displayed`)
+      .post(`http://${apiRoute}/attendees/displayed`, jsonData, {
+        "Content-Type": "application/json"
+      })
       .then((response) => {
         console.log("API Response:", response.data);
         if (Array.isArray(response.data)) {
@@ -23,55 +36,57 @@ const InviteList = () => {
         console.error(error);
         setError("Failed to retrieve attendees list");
       });
-  }, []); // Empty dependency array to run only once on mount
+  }, [weddingId]); // Add wedding_id as a dependency to re-run if it changes
+
 
   return (
     <div className="overflow-x-auto bg-neutral p-4 rounded-lg shadow-md">
-  {error && <p className="text-error">{error}</p>}
-  <table className="table table-xs table-pin-rows table-pin-cols text-primary border-accent">
-    <thead>
-      <tr>
-        <th className="bg-secondary text-primary"></th>
-        <th className="bg-secondary text-primary">First Name</th>
-        <th className="bg-secondary text-primary">Last Name</th>
-        <th className="bg-secondary text-primary">Email</th>
-        <th className="bg-secondary text-primary">Phone Number</th>
-        <th className="bg-secondary text-primary">RSVP</th>
-        <th className="bg-secondary text-primary"></th>
-      </tr>
-    </thead>
-    <tbody>
-      {attendees.map((attendee, index) => (
-        <tr key={index} className="hover:bg-accent">
-          <th className="text-secondary">{index + 1}</th>
-          <td>{attendee.f_name}</td>
-          <td>{attendee.l_name}</td>
-          <td>{attendee.email}</td>
-          <td>{attendee.phone_number}</td>
-          <td>{attendee.rsvp ? "Yes" : "No"}</td>
-          <td>
-            <DeleteButton 
-              firstName={attendee.f_name}
-              lastName={attendee.l_name}
-              apiRoute={apiRoute}
-            />
-          </td>
+    {error && <p className="text-error">{error}</p>}
+    <table className="table table-xs text-primary border-accent w-full">
+      <thead>
+        <tr className="text-left">
+          <th className="bg-secondary text-primary"></th>
+          <th className="bg-secondary text-primary">First Name</th>
+          <th className="bg-secondary text-primary">Last Name</th>
+          <th className="hidden sm:table-cell bg-secondary text-primary">Email</th> {/* Hidden on small screens */}
+          <th className="hidden sm:table-cell bg-secondary text-primary">Phone Number</th> {/* Hidden on small screens */}
+          <th className="bg-secondary text-primary">RSVP</th>
+          <th className="bg-secondary text-primary"></th>
         </tr>
-      ))}
-    </tbody>
-    <tfoot>
-      <tr>
-        <th className="bg-secondary text-primary"></th>
-        <th className="bg-secondary text-primary">First Name</th>
-        <th className="bg-secondary text-primary">Last Name</th>
-        <th className="bg-secondary text-primary">Email</th>
-        <th className="bg-secondary text-primary">Phone Number</th>
-        <th className="bg-secondary text-primary">RSVP</th>
-        <th className="bg-secondary text-primary"></th>
-      </tr>
-    </tfoot>
-  </table>
-</div>
+      </thead>
+      <tbody>
+        {attendees.map((attendee, index) => (
+          <tr key={index} className="hover:bg-accent">
+            <th className="text-secondary">{index + 1}</th>
+            <td>{attendee.f_name}</td>
+            <td>{attendee.l_name}</td>
+            <td className="hidden sm:table-cell">{attendee.email}</td> {/* Hidden on small screens */}
+            <td className="hidden sm:table-cell">{attendee.phone_number}</td> {/* Hidden on small screens */}
+            <td>{attendee.rsvp ? "Yes" : "No"}</td>
+            <td>
+              <DeleteButton 
+                firstName={attendee.f_name}
+                lastName={attendee.l_name}
+                apiRoute={apiRoute}
+              />
+            </td>
+          </tr>
+        ))}
+      </tbody>
+      <tfoot>
+        <tr>
+          <th className="bg-secondary text-primary"></th>
+          <th className="bg-secondary text-primary">First Name</th>
+          <th className="bg-secondary text-primary">Last Name</th>
+          <th className="hidden sm:table-cell bg-secondary text-primary">Email</th> {/* Hidden on small screens */}
+          <th className="hidden sm:table-cell bg-secondary text-primary">Phone Number</th> {/* Hidden on small screens */}
+          <th className="bg-secondary text-primary">RSVP</th>
+          <th className="bg-secondary text-primary"></th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  
   );
 };
 
@@ -106,11 +121,12 @@ const DeleteButton = ({ firstName, lastName, apiRoute }) => {
 
   return (
     <button
-    className="btn btn-glass btn-error hover:bg-error-focus text-white"
+    className="btn btn-glass btn-error hover:bg-error-focus text-white w-full max-w-xs"
     onClick={handleSubmit}
   >
     Remove
   </button>
+  
   
   );
 };

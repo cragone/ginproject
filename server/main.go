@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"server/handlers"
+	"server/middleware"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -42,12 +43,14 @@ func main() {
 
 	// RSVP routes
 	rsvp := r.Group("/rsvp")
+	rsvp.Use(middleware.TokenAuthMiddleware())
 	{
 		rsvp.POST("/decided", handlers.HandlePostRsvpDecision)
 	}
 
 	// Attendees routes
 	people := r.Group("/attendees")
+	people.Use(middleware.TokenAuthMiddleware())
 	{
 		people.POST("/displayed", handlers.HandleGetAllAttendees)
 		people.POST("/newattendee", handlers.HandleAddAttendee)

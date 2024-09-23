@@ -12,7 +12,11 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-var jwtKey []byte
+// setting variable for sercret key
+var JwtKey []byte
+
+// token storage map
+var TokenStore = make(map[string]string)
 
 // load up jwt secret key
 func init() {
@@ -29,7 +33,7 @@ func init() {
 		return
 	}
 
-	jwtKey = []byte(sercretKey)
+	JwtKey = []byte(sercretKey)
 	fmt.Println("secret loaded")
 }
 
@@ -48,10 +52,13 @@ func CreateJWT(email string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	// sign the token using the secret key
-	tokenString, err := token.SignedString(jwtKey)
+	tokenString, err := token.SignedString(JwtKey)
 	if err != nil {
 		return "", err
 	}
+
+	//token store in mao
+	TokenStore[email] = tokenString
 
 	return tokenString, nil
 }

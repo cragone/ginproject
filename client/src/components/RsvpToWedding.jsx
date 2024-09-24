@@ -5,7 +5,7 @@ import axios from "axios";
 //need to update this so it is not case sensitive.
 
 const RsvpToWedding = () => {
-  const apiRoute = "localhost";
+  const apiRoute = "http://localhost:8080";
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [rsvp, setRsvp] = useState("");
@@ -25,7 +25,7 @@ const RsvpToWedding = () => {
     console.log(jsonData);
 
     axios
-      .post(`http://${apiRoute}:8080/rsvp/decided`, jsonData, {
+      .post(`${apiRoute}/rsvp/decided`, jsonData, {
         "Content-Type": "application/json"
       })
       .then((response) =>{

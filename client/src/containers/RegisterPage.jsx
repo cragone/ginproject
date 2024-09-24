@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 
 const RegisterPage = () => {
-  const apiRoute = "localhost:8080";
+  const apiRoute = "http://localhost:8080";
   const [userEmail, setUserEmail] = useState("");
   const [userPassword, setUserPassword] = useState("");
   const [fname, setFname] = useState("");
@@ -18,7 +18,7 @@ const RegisterPage = () => {
     // console.log(jsonData); can't log the password need to hash.
 
     axios
-      .post(`http://${apiRoute}/auth/usercreated`, jsonData, {
+      .post(`${apiRoute}/auth/usercreated`, jsonData, {
         headers: {
           "Content-Type": "application/json",
         },

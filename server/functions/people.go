@@ -122,13 +122,11 @@ func RemoveAttendee(attendee AttendeeInfo) ([]AttendeeInfo, error) {
 	DELETE FROM
 		attendees
 	WHERE
-		f_name = $1
-	AND
-		l_name = $2
+		attendee = $1
 	`
 
 	// Execute the query
-	_, err = db.Exec(query, attendee.FirstName, attendee.LastName)
+	_, err = db.Exec(query, attendee.AttendeeID)
 	if err != nil {
 		return nil, fmt.Errorf("couldn't execute delete query: %v", err)
 	}

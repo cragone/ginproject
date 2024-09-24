@@ -10,10 +10,11 @@ type Rsvp struct {
 	LastName   string `json:"l_name"`
 	Rsvp       bool   `json:"rsvp"`
 	WeddingID  int    `json:"wedding_id"`
+	Email      string `json:"email"`
 	AttendeeID int    `json:"attendee"`
 }
 
-func RsvpAdded(firstName, lastName string, rsvp bool) (rsvps []Rsvp, err error) {
+func RsvpAdded(email string, rsvp bool) (rsvps []Rsvp, err error) {
 	db, err := networkconn.GetDB()
 	if err != nil {
 		return nil, err
@@ -26,26 +27,22 @@ func RsvpAdded(firstName, lastName string, rsvp bool) (rsvps []Rsvp, err error) 
 		SET 
 			rsvp = $1
 		WHERE
-			f_name = $2 
-		AND
-			l_name = $3
+			email = $2 
 	`
-	_, err = db.Exec(query, rsvp, firstName, lastName)
+	_, err = db.Exec(query, rsvp, email)
 	if err != nil {
 		return nil, err
 	}
 
 	query = `
 		SELECT
-			f_name, l_name, rsvp
+			email, rsvp
 		FROM
 			attendees
 		WHERE
-			f_name = $1 
-		AND
-			l_name = $2
+			email = $1
 	`
-	rows, err := db.Query(query, firstName, lastName)
+	rows, err := db.Query(query, email)
 	if err != nil {
 		return nil, err
 	}
@@ -53,7 +50,7 @@ func RsvpAdded(firstName, lastName string, rsvp bool) (rsvps []Rsvp, err error) 
 
 	for rows.Next() {
 		var r Rsvp
-		err = rows.Scan(&r.FirstName, &r.LastName, &r.Rsvp)
+		err = rows.Scan(&r.Email, &r.Rsvp)
 		if err != nil {
 			return nil, err
 		}

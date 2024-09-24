@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 
 const LoginPage = () => {
-  const apiRoute = "localhost:8080";
+  const apiRoute = "http://localhost:8080";
   const [userEmail, setUserEmail] = useState("");
   const [userPassword, setUserPassword] = useState("");
 
@@ -15,7 +15,7 @@ const LoginPage = () => {
     console.log('jsonData:', jsonData);
   
     try {
-      const response = await axios.post(`http://${apiRoute}/auth/loggedin`, jsonData, {
+      const response = await axios.post(`${apiRoute}/auth/loggedin`, jsonData, {
         headers: {
           "Content-Type": "application/json",
         },

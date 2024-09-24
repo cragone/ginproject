@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const InviteList = () => {
-  const apiRoute = "localhost:8080";
+  const apiRoute = "http://localhost:8080";
   const [attendees, setAttendees] = useState([]);
   const [error, setError] = useState("");
   const weddingId = localStorage.getItem("wedding_id");
@@ -19,7 +19,7 @@ const InviteList = () => {
 
     // Send wedding_id as part of the request body
     axios
-      .post(`http://${apiRoute}/attendees/displayed`, jsonData, {
+      .post(`${apiRoute}/attendees/displayed`, jsonData, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`, // Include the token in the Authorization header
@@ -77,9 +77,8 @@ const InviteList = () => {
               <td>{attendee.rsvp ? "Yes" : "No"}</td>
               <td>
                 <DeleteButton
-                  firstName={attendee.f_name}
-                  lastName={attendee.l_name}
-                  apiRoute={apiRoute}
+                  attendeeID={attendee.attendee} //passing attendee as a prop
+                  apiRoute={apiRoute} //pass
                 />
               </td>
             </tr>
@@ -109,16 +108,15 @@ const InviteList = () => {
 
 export default InviteList;
 
-const DeleteButton = ({ firstName, lastName, apiRoute }) => {
+const DeleteButton = ({ attendeeID, apiRoute }) => {
   const handleSubmit = async () => {
     const jsonData = {
-      f_name: firstName,
-      l_name: lastName,
+      attendee: parseInt(attendeeID)
     };
     console.log(jsonData);
 
     axios
-      .delete(`http://${apiRoute}/attendees/deleteattendee`, {
+      .delete(`${apiRoute}/attendees/deleteattendee`, {
         data: jsonData,
         headers: {
           "Content-Type": "application/json",

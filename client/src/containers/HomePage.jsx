@@ -4,7 +4,7 @@ import RsvpToWedding from "../components/RsvpToWedding";
 import axios from 'axios'; // Import axios
 
 const HomePage = () => {
-  const apiRoute = "localhost:8080"; // Define your API route here
+  const apiRoute = "http://localhost:8080"; // Define your API route here
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -26,7 +26,7 @@ const HomePage = () => {
       wedding_id: parseInt(weddingId) 
     }
     axios
-      .post(`http://${apiRoute}/attendees/newattendee`, jsonData, {
+      .post(`${apiRoute}/attendees/newattendee`, jsonData, {
         headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`

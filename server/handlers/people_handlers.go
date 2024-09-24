@@ -67,9 +67,8 @@ func HandleAttendeeRemoval(c *gin.Context) {
 
 	fmt.Println("attendee to remove:", delAttendee)
 
-	attendee, err := functions.RemoveAttendee(functions.AttendeeInfo{
-		FirstName: delAttendee.FirstName,
-		LastName:  delAttendee.LastName,
+	person, err := functions.RemoveAttendee(functions.AttendeeInfo{
+		AttendeeID: delAttendee.AttendeeID,
 	})
 	if err != nil {
 		fmt.Println("error removing attendee:", err)
@@ -77,6 +76,6 @@ func HandleAttendeeRemoval(c *gin.Context) {
 		return
 	}
 
-	fmt.Println("attendee removed:", attendee)
-	c.JSON(200, gin.H{"removed_attendee": attendee})
+	fmt.Println("attendee removed:", person)
+	c.JSON(200, gin.H{"removed_attendee": person})
 }

@@ -12,9 +12,7 @@ const HomePage = () => {
   const rsvp = false
   const weddingId = localStorage.getItem("wedding_id")
   const token = localStorage.getItem("token")
-  console.log(token)
-  console.log(weddingId)
-  
+
 
   const handleSubmit = async () => {
     const jsonData = {

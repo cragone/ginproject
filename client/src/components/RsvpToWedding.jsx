@@ -9,6 +9,7 @@ const RsvpToWedding = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [rsvp, setRsvp] = useState("");
+  // const weddingId = localStorage.getItem("wedding_id");
 
 
   const handleRsvpSelection = (rsvpSelect) => {

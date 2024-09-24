@@ -109,6 +109,9 @@ const InviteList = () => {
 export default InviteList;
 
 const DeleteButton = ({ attendeeID, apiRoute }) => {
+  const token = localStorage.getItem("token")
+  console.log(token)
+
   const handleSubmit = async () => {
     const jsonData = {
       attendee: parseInt(attendeeID)
@@ -117,10 +120,11 @@ const DeleteButton = ({ attendeeID, apiRoute }) => {
 
     axios
       .delete(`${apiRoute}/attendees/deleteattendee`, {
-        data: jsonData,
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Include the token in the Authorization header
         },
+        data: jsonData // Pass the data here
       })
       .then((response) => {
         console.log(response);

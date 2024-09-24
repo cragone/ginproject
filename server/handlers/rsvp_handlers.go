@@ -10,6 +10,7 @@ import (
 type RsvpRequest struct {
 	FirstName string `json:"f_name"`
 	LastName  string `json:"l_name"`
+	Email     string `json:"email"`
 	Rsvp      bool   `json:"rsvp"`
 }
 
@@ -24,7 +25,7 @@ func HandlePostRsvpDecision(c *gin.Context) {
 	}
 
 	//call the rsvp added function to update the rsvp status
-	rsvps, err := functions.RsvpAdded(rsvpRequest.FirstName, rsvpRequest.LastName, rsvpRequest.Rsvp)
+	rsvps, err := functions.RsvpAdded(rsvpRequest.Email, rsvpRequest.Rsvp)
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return

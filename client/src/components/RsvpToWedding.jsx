@@ -6,9 +6,9 @@ import axios from "axios";
 
 const RsvpToWedding = () => {
   const apiRoute = "http://localhost:8080";
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
   const [rsvp, setRsvp] = useState("");
+  const token = localStorage.getItem("token");
   // const weddingId = localStorage.getItem("wedding_id");
 
 
@@ -18,8 +18,7 @@ const RsvpToWedding = () => {
 
   const handleSubmit = async () => {
     const jsonData = {
-    f_name: firstName,
-    l_name: lastName,
+    email: email,
     rsvp: rsvp === "true"
   };
 
@@ -27,11 +26,13 @@ const RsvpToWedding = () => {
 
     axios
       .post(`${apiRoute}/rsvp/decided`, jsonData, {
-        "Content-Type": "application/json"
+        headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      },
       })
       .then((response) =>{
-        setFirstName("");
-        setLastName("");
+        setEmail("");
         setRsvp("");
         console.log(response)
         alert("rsvp made")
@@ -52,20 +53,12 @@ const RsvpToWedding = () => {
       {/* First Name Input */}
       <input
         type="text"
-        placeholder="First Name"
-        value={firstName}
-        onChange={(e) => setFirstName(e.target.value)}
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
         className="input input-bordered border-secondary focus:border-accent w-full max-w-xs mb-4"
       />
-  
-      {/* Last Name Input */}
-      <input
-        type="text"
-        placeholder="Last Name"
-        value={lastName}
-        onChange={(e) => setLastName(e.target.value)}
-        className="input input-bordered border-secondary focus:border-accent w-full max-w-xs mb-4"
-      />
+
   
       {/* RSVP Dropdown */}
       <div className="dropdown dropdown-hover mb-4">
@@ -89,7 +82,7 @@ const RsvpToWedding = () => {
       <button
         className="btn btn-primary bg-primary hover:bg-primary-focus text-white"
         onClick={handleSubmit}
-        disabled={firstName === "" || lastName === "" || !rsvp}
+        disabled={email === "" || !rsvp}
       >
         Submit
       </button>

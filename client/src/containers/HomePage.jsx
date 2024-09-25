@@ -12,6 +12,8 @@ const HomePage = () => {
   const rsvp = false
   const weddingId = localStorage.getItem("wedding_id")
   const token = localStorage.getItem("token")
+  // const user_lname = localStorage.getItem("user_lname")
+  // console.log(user_lname)
 
 
   const handleSubmit = async () => {
@@ -49,6 +51,9 @@ const HomePage = () => {
   // Render wedding components only after login
   return (
 <div className="flex flex-col min-h-screen bg-base-100">
+  <div className="w-full bg-primary text-white p-4 text-center">
+  <h1 className="text-4xl font-bold">This Persons Wedding</h1>   
+  </div>
   {/* Main Content Area */}
   <div className="flex flex-col md:flex-row flex-1">
     {/* RSVP Section */}

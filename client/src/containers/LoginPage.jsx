@@ -25,7 +25,7 @@ const LoginPage = () => {
       //locally caching the wedding id and jwt
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("wedding_id", response.data.wedding_id);
-      //use localStorage.getItem() to pull these items back from the cache.
+      localStorage.setItem("user_lname", response.data.user_lname); // Store user_lname
 
       setUserEmail("");
       setUserPassword("");

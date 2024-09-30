@@ -1,5 +1,5 @@
 #build the go application
-FROM golang:1.20 AS build
+FROM golang:1.22-alpine AS build
 
 #set the current working directory inside the container
 WORKDIR /server
@@ -14,13 +14,16 @@ RUN go mod download
 COPY . .
 
 #Build the go app
-RUN go build -o main .
+RUN go build -o main 
 
 #serve the application
-FROM gin:latest
+FROM alpine:latest
 
 #set the current working directory inside container
 WORKDIR /server
+
+#install necessary packages 
+RUN apk --no-cache add ca-certificates
 
 #copy the pre built binary file from the previous stage
 COPY --from=build /server/main .
@@ -29,10 +32,15 @@ COPY --from=build /server/main .
 COPY --from=build /server/dist ./dist
 
 #copy the assets folder
-COPY --from=build /server/assets ./assets
+COPY --from=build /server/dist/assets ./assets
+
+#copy the env
+COPY --from=build /server/.env /server/.env
 
 #expose port 8080 to outside world
-EXPOSE 8080
+EXPOSE 80
 
 #command to run the executable
 CMD ["./main"]
+
+

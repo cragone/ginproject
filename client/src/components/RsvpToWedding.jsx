@@ -5,7 +5,7 @@ import axios from "axios";
 //need to update this so it is not case sensitive.
 
 const RsvpToWedding = () => {
-  const apiRoute = "http://localhost:8080";
+  const apiRoute = import.meta.env.VITE_APP_API_BASE;
   const [email, setEmail] = useState("");
   const [rsvp, setRsvp] = useState("");
   const token = localStorage.getItem("token");

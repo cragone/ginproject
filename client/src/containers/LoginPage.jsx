@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 
 const LoginPage = () => {
-  const apiRoute = "http://localhost:8080";
+  const apiRoute = import.meta.env.VITE_APP_API_BASE;
   const [userEmail, setUserEmail] = useState("");
   const [userPassword, setUserPassword] = useState("");
 

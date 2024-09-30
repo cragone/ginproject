@@ -26,13 +26,25 @@ func main() {
 
 	// Configure CORS
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:5173"}, // Replace with your React app's URL
+		AllowOrigins:     []string{"*"}, // Replace with your React app's URL
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
 		// MaxAge:           24 * time.Hour, // Remove this line to turn off the time limit
 	}))
+
+	//serve entire dist directory as static file
+	r.Static("/dist", "./dist")
+
+	//serve the couple.png file
+	r.StaticFile("/couple.png", "./dist/couple.png")
+
+	//serve the assets directory
+	r.Static("/assets", "./dist/assets")
+
+	//load the html files
+	r.LoadHTMLFiles("dist/index.html")
 
 	// auth routes
 	user := r.Group("/auth")
@@ -59,10 +71,9 @@ func main() {
 
 	// No route handler
 	r.NoRoute(func(c *gin.Context) {
-		fmt.Println("you are in no route")
-		c.HTML(200, "index.html", nil)
+		c.File("dist/index.html") // corrected routing
 	})
 
-	fmt.Println("server has started")
+	fmt.Println("server has started on port 8080")
 	r.Run(":8080")
 }

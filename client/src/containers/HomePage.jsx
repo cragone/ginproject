@@ -4,7 +4,7 @@ import RsvpToWedding from "../components/RsvpToWedding";
 import axios from 'axios'; // Import axios
 
 const HomePage = () => {
-  const apiRoute = "http://localhost:8080"; // Define your API route here
+  const apiRoute = import.meta.env.VITE_APP_API_BASE; // Define your API route here
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -52,7 +52,7 @@ const HomePage = () => {
   return (
 <div className="flex flex-col min-h-screen bg-base-100">
   <div className="w-full bg-primary text-white p-4 text-center">
-  <h1 className="text-4xl font-bold">The {userLname} Wedding</h1>   
+  <h1 className="text-4xl font-bold">The {userLname}'s Wedding</h1>   
   </div>
   {/* Main Content Area */}
   <div className="flex flex-col md:flex-row flex-1">

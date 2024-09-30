@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const InviteList = () => {
-  const apiRoute = "http://localhost:8080";
+  const apiRoute = import.meta.env.VITE_APP_API_BASE;
   const [attendees, setAttendees] = useState([]);
   const [error, setError] = useState("");
   const weddingId = localStorage.getItem("wedding_id");
@@ -43,7 +43,7 @@ const InviteList = () => {
 
   return (
     <div className="overflow-x-auto bg-neutral p-4 rounded-lg shadow-md">
-      {error && <p className="text-error">{error}</p>}
+      {error && <p className="text-error">No List Provided Yet</p>}
       <table className="table table-xs text-primary border-accent w-full">
         <thead>
           <tr className="text-left">

@@ -79,3 +79,29 @@ func HandleAttendeeRemoval(c *gin.Context) {
 	fmt.Println("attendee removed:", person)
 	c.JSON(200, gin.H{"removed_attendee": person})
 }
+
+func HandleUpdatePhoneNumber(c *gin.Context) {
+	fmt.Println("update phone number handler called")
+
+	var updateAttendee functions.AttendeeInfo
+	if err := c.BindJSON(&updateAttendee); err != nil {
+		fmt.Println("error binding JSON:", err)
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+
+	fmt.Println("update attendee:", updateAttendee)
+
+	p, err := functions.UpdatePhoneNumber(functions.AttendeeInfo{
+		Email:       updateAttendee.Email,
+		PhoneNumber: updateAttendee.PhoneNumber,
+	})
+	if err != nil {
+		fmt.Println("error updating attendee's phone number:", err)
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+
+	fmt.Println("number updated:", p)
+	c.JSON(200, gin.H{"updated phone number": p})
+}

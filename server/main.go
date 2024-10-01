@@ -62,8 +62,9 @@ func main() {
 
 	// Attendees routes
 	people := r.Group("/attendees")
-	people.Use(middleware.TokenAuthMiddleware())
+	// people.Use(middleware.TokenAuthMiddleware())
 	{
+		people.POST("/updatenumber", handlers.HandleUpdatePhoneNumber)
 		people.POST("/displayed", handlers.HandleGetAllAttendees)
 		people.POST("/newattendee", handlers.HandleAddAttendee)
 		people.DELETE("/deleteattendee", handlers.HandleAttendeeRemoval)
@@ -74,6 +75,6 @@ func main() {
 		c.File("dist/index.html") // corrected routing
 	})
 
-	fmt.Println("server has started on port 8080")
+	fmt.Println("server has started on port 80")
 	r.Run(":80")
 }

@@ -135,3 +135,39 @@ func RemoveAttendee(attendee AttendeeInfo) ([]AttendeeInfo, error) {
 
 	return nil, nil
 }
+
+func UpdatePhoneNumber(attendee AttendeeInfo) (string, error) {
+	// Create db connection
+	db, err := networkconn.GetDB()
+	if err != nil {
+		return "", fmt.Errorf("error connecting to db: %v", err)
+	}
+	defer db.Close()
+
+	// Confirm the length of the phone number
+	if len(attendee.PhoneNumber) != 10 {
+		return "", fmt.Errorf("phone number isn't the correct length")
+	}
+
+	// Construct the query for the db
+	query := `
+    UPDATE 
+        attendees
+    SET 
+        phone_number = $1
+    WHERE 
+        email = $2`
+
+	// Execute the query
+	_, err = db.Exec(query, attendee.PhoneNumber, attendee.Email)
+
+	// Return error if there is an issue with query execution
+	if err != nil {
+		return "", fmt.Errorf("error executing query: %v", err)
+	}
+
+	fmt.Println("phone number updated in the database")
+
+	// Return the updated phone number
+	return attendee.PhoneNumber, nil
+}

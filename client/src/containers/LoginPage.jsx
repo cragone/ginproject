@@ -1,10 +1,12 @@
 import axios from "axios";
 import React, { useState } from "react";
+import MyComponent from "../components/MyComponent";
 
 const LoginPage = () => {
   const apiRoute = import.meta.env.VITE_APP_API_BASE;
   const [userEmail, setUserEmail] = useState("");
   const [userPassword, setUserPassword] = useState("");
+  const props = "hello world"
 
   const handleSubmit = async () => {
     console.log('handleSubmit called');
@@ -43,6 +45,8 @@ const LoginPage = () => {
       {/* Title Section */}
       <div className="mb-8 text-center">
         <h1 className="text-4xl font-bold text-primary">
+          <MyComponent 
+          value={props}/>
           Plan Your Wedding the Simple Way
         </h1>
         <p className="text-lg text-secondary mt-2">With ease and elegance</p>

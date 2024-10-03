@@ -4,6 +4,11 @@ import RsvpToWedding from "../components/RsvpToWedding";
 import axios from 'axios'; // Import axios
 
 const HomePage = () => {
+  // currently only using this capitalize function to capitalize first letter of last name.
+  const capitalizeFirstLetter = (str) => {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
+
   const apiRoute = import.meta.env.VITE_APP_API_BASE; // Define your API route here
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -12,8 +17,10 @@ const HomePage = () => {
   const rsvp = false
   const weddingId = localStorage.getItem("wedding_id")
   const token = localStorage.getItem("token")
-  const userLname = localStorage.getItem("user_lname")
-  console.log(userLname)
+  const userLname = capitalizeFirstLetter(localStorage.getItem("user_lname"))
+
+
+
 
 
   const handleSubmit = async () => {
@@ -59,7 +66,8 @@ const HomePage = () => {
     {/* RSVP Section */}
     <div className="w-full md:w-1/2 flex flex-col items-center justify-center bg-neutral p-4 md:p-8 rounded-lg md:rounded-l-lg shadow-md">
       {/* <h1 className="text-3xl font-bold text-primary mb-4">RSVP to the Wedding</h1> */}
-      <RsvpToWedding />
+      <RsvpToWedding 
+      userLname={userLname}/>
     </div>
 
     {/* Wedding List Section */}

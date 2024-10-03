@@ -4,18 +4,19 @@ import axios from "axios";
 
 //need to update this so it is not case sensitive.
 
-const RsvpToWedding = () => {
+const RsvpToWedding = ({ userLname }) => {
   const apiRoute = import.meta.env.VITE_APP_API_BASE;
   const [email, setEmail] = useState("");
   const [rsvp, setRsvp] = useState("");
   const token = localStorage.getItem("token");
+  const userLastName = userLname
   // const weddingId = localStorage.getItem("wedding_id");
 
 
   const handleRsvpSelection = (rsvpSelect) => {
     setRsvp(rsvpSelect)
   }
-
+  console.log(userLname)
   const handleSubmit = async () => {
     const jsonData = {
     email: email,
@@ -48,7 +49,7 @@ const RsvpToWedding = () => {
   return (
     <div className="flex items-center justify-center min-h-screen">
     <div className="flex flex-col items-center bg-neutral p-8 rounded-lg">
-      <h1 className="text-3xl font-bold text-primary mb-4">RSVP to the Wedding</h1>
+      <h1 className="text-3xl font-bold text-primary mb-4">RSVP to {userLastName}'s Wedding</h1>
   
       {/* First Name Input */}
       <input

@@ -1,0 +1,93 @@
+name: Build and Deploy to Azure
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the code
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      # Step 2: Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 21 # Adjust to your Node.js version
+
+      # Step 3: Install dependencies in the React app
+      - name: Install dependencies for React app
+        working-directory: ./client
+        run: npm install
+
+      # Step 4: Build the React app
+      - name: Build React app
+        working-directory: ./client
+        run: npm run build # Adjust to your build command
+
+      # Step 5: Move built React files to the server directory
+      - name: Move React build files
+        run: |
+          mkdir -p ./server/dist
+          cp -r ./client/dist ./server/
+          cp -r ./client/dist/assets ./server/dist/assets
+
+      # Step 6: Create .env file for server
+      - name: Create .env file for server using secrets
+        working-directory: ./server
+        run: |
+          echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
+          echo "DB_USER=${{ secrets.DB_USER }}" >> .env
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env
+          echo "DB_SSL_MODE=${{ secrets.DB_SSL_MODE }}" >> .env
+          echo "DB_PORT=${{ secrets.DB_PORT }}" >> .env
+          echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env
+          echo "PGPASSWORD=${{ secrets.PGPASSWORD }}" >> .env
+          echo "VITE_APP_API_BASE=${{ secrets.VITE_APP_API_BASE }}" >> .env
+
+      # Step 7: Build the Go application
+      - name: Build Go application
+        run: |
+          docker build -t weddingapp ./server # Adjust the name if needed
+
+      # Step 8: Log in to Azure
+      - name: Login via Azure CLI
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # Step 9: Login to Azure Container Registry
+      - name: Login to Azure Docker
+        uses: azure/docker-login@v2
+        with:
+          login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      # Step 10: Push the Docker image to Azure Container Registry
+      - name: Push Docker image to Azure Container Registry
+        run: |
+          docker tag my-go-app:latest ${{ secrets.REGISTRY_LOGIN_SERVER }}/my-go-app:${{ github.sha }}
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/my-go-app:${{ github.sha }}
+
+      # Step 11: Set Azure subscription
+      - name: Set Azure subscription
+        run: az account set --subscription ${{ secrets.SUBSCRIPTION_ID }}
+
+      # Step 12: Deploy to Azure Web App (optional)
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: "your-app-name" # Replace with your app name
+          images: "${{ secrets.REGISTRY_LOGIN_SERVER }}/my-go-app:${{ github.sha }}"
+
+      # Step 13: Sign out of Azure
+      - name: Sign out of Azure
+        run: az logout

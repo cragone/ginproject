@@ -14,7 +14,7 @@ RUN go mod download
 COPY . .
 
 #Build the go app
-RUN go build -o main 
+RUN go build -o main .
 
 #serve the application
 FROM alpine:latest

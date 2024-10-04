@@ -47,29 +47,31 @@ func main() {
 
 	//load the html files
 	r.LoadHTMLFiles("dist/index.html")
-
-	// auth routes
-	user := r.Group("/auth")
+	api := r.Group("/api")
 	{
-		user.POST("/usercreated", handlers.HandleCreateUser)
-		user.POST("/loggedin", handlers.HandleUserLogin)
-	}
+		// auth routes
+		user := api.Group("/auth")
+		{
+			user.POST("/usercreated", handlers.HandleCreateUser)
+			user.POST("/loggedin", handlers.HandleUserLogin)
+		}
 
-	// RSVP routes
-	rsvp := r.Group("/rsvp")
-	rsvp.Use(middleware.TokenAuthMiddleware())
-	{
-		rsvp.POST("/decided", handlers.HandlePostRsvpDecision)
-	}
+		// RSVP routes
+		rsvp := api.Group("/rsvp")
+		rsvp.Use(middleware.TokenAuthMiddleware())
+		{
+			rsvp.POST("/decided", handlers.HandlePostRsvpDecision)
+		}
 
-	// Attendees routes
-	people := r.Group("/attendees")
-	// people.Use(middleware.TokenAuthMiddleware())
-	{
-		people.POST("/updatenumber", handlers.HandleUpdatePhoneNumber)
-		people.POST("/displayed", handlers.HandleGetAllAttendees)
-		people.POST("/newattendee", handlers.HandleAddAttendee)
-		people.DELETE("/deleteattendee", handlers.HandleAttendeeRemoval)
+		// Attendees routes
+		people := api.Group("/attendees")
+		// people.Use(middleware.TokenAuthMiddleware())
+		{
+			people.POST("/updatenumber", handlers.HandleUpdatePhoneNumber)
+			people.POST("/displayed", handlers.HandleGetAllAttendees)
+			people.POST("/newattendee", handlers.HandleAddAttendee)
+			people.DELETE("/deleteattendee", handlers.HandleAttendeeRemoval)
+		}
 	}
 
 	// No route handler

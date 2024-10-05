@@ -37,6 +37,12 @@ jobs:
           mkdir -p ./server/dist
           cp -r ./client/dist ./server/
           cp -r ./client/dist/assets ./server/dist/assets
+        
+      #create env for file folder
+      - name: Create .env for client hard coded
+        working-directory: ./client
+        run: |
+          echo "VITE_APP_API_BASE="http://localhost:8080/api"" >> .env
 
       # Step 6: Create .env file for server
       - name: Create .env file for server using secrets
@@ -50,7 +56,7 @@ jobs:
           echo "DB_PORT=${{ secrets.DB_PORT }}" >> .env
           echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env
           echo "PGPASSWORD=${{ secrets.PGPASSWORD }}" >> .env
-          echo "VITE_APP_API_BASE=${{ secrets.VITE_APP_API_BASE }}" >> .env
+          
 
       # Step 7: Build the Go application
       - name: Build Go application
